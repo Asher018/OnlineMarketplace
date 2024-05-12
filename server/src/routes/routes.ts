@@ -42,12 +42,14 @@ export const configureRoutes = (
     const name = req.body.name;
     const address = req.body.address;
     const nickname = req.body.nickname;
+    const role = req.body.role;
     const user = new User({
       email: email,
       password: password,
       name: name,
       address: address,
       nickname: nickname,
+      role: role,
     });
     user
       .save()
@@ -62,7 +64,7 @@ export const configureRoutes = (
   router.post("/itemUpload", (req: Request, res: Response) => {
     if (req.isAuthenticated()) {
       try {
-        const name = req.body.name
+        const name = req.body.name;
         const price = Number(req.body.price);
         const description = req.body.description;
         const image = req.body.image;
@@ -76,13 +78,53 @@ export const configureRoutes = (
           owner: owner,
           boughtBy: boughtBy,
         });
-        newItem.save().then((data) => {
-          res.status(200).send(data);
-        }).catch((error) => {
-          res.status(500).send(error);
-        });
+        newItem
+          .save()
+          .then((data) => {
+            res.status(200).send(data);
+          })
+          .catch((error) => {
+            res.status(500).send(error);
+          });
       } catch (error) {
         console.error("Error uploading item:", error);
+        res.status(500).send(error);
+      }
+    } else {
+      res.status(500).send("User is not logged in.");
+    }
+  });
+
+  router.post("/buyItem", (req: Request, res: Response) => {
+    if (req.isAuthenticated()) {
+      try {
+        const itemId = req.body.itemId;
+        const boughtBy = req.body.boughtBy;
+        const query = Item.findById(itemId);
+        query
+          .then((data) => {
+            if (data) {
+              if (data.boughtBy !== "") {
+                res.status(500).send("item is already bought");
+              }
+              data.boughtBy = boughtBy;
+              data
+                .save()
+                .then((data) => {
+                  res.status(200).send(data);
+                })
+                .catch((error) => {
+                  res.status(500).send(error);
+                });
+            } else {
+              res.status(500).send("No item found");
+            }
+          })
+          .catch((error) => {
+            res.status(500).send(error);
+          });
+      } catch (error) {
+        console.error("Error buying item:", error);
         res.status(500).send(error);
       }
     } else {
@@ -130,6 +172,20 @@ export const configureRoutes = (
         console.log(error);
         res.status(500).send("Internal server error.");
       });
+  });
+
+  router.post("/getMyItems", (req: Request, res: Response) => {
+    if (req.isAuthenticated()) {
+      const owner = req.body.owner;
+      const query = Item.find({owner: owner});
+      query.then((data) => {
+        res.status(200).send(data);
+      }).catch((error) => {
+        res.status(500).send(error);
+      })
+    } else {
+      res.status(500).send("User is not logged in.");
+    }
   });
 
   router.get("/checkAuth", (req: Request, res: Response) => {

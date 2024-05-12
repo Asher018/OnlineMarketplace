@@ -36,6 +36,8 @@ export class NavbarComponent {
   async logout() {
     console.log('logout pressed');
     const message = await firstValueFrom(this.authService.logout());
+    this.user = null;
+    location.reload();
     console.log(message);
   }
 }

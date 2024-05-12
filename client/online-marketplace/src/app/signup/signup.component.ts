@@ -1,14 +1,20 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../shared/services/auth.service';
+import { NavbarComponent } from '../navbar/navbar.component';
+import {MatSelectModule} from '@angular/material/select';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatButtonModule } from '@angular/material/button';
+import { Router } from '@angular/router';
 
 // FormsModule, ReactiveFormsModule
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, NavbarComponent, MatFormFieldModule, MatSelectModule, MatInputModule, MatButtonModule],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.scss'
 })
@@ -18,7 +24,8 @@ export class SignupComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private location: Location,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -28,7 +35,8 @@ export class SignupComponent implements OnInit {
       address: [''],
       nickname: [''],
       password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
+      confirmPassword: ['', Validators.required],
+      role: ['', Validators.required]
     }, {
       validator: this.mustMatch('password', 'confirmPassword')
     })
@@ -57,6 +65,7 @@ export class SignupComponent implements OnInit {
       this.authService.register(this.signupForm.value).subscribe({
         next: (data) => {
           console.log(data);
+          this.router.navigate(['/login'])
         }, error: (err) => {
           console.log(err);
         }

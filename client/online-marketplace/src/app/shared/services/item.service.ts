@@ -45,5 +45,40 @@ export class ItemService {
     ) as Item[];
   }
 
+  async getMyItems() {
+    const user = await this.getUser();
+    const body = new URLSearchParams();
+    body.set("owner", user!._id);
+    return await firstValueFrom(
+      this.http.post('http://localhost:5000/app/getMyItems', body, {
+        withCredentials: true,
+        headers: this.headers,
+      })
+    );
+  }
+
+  async buyItem(item: Item) {
+    const user = await this.getUser();
+    if (!user) { return; }
+
+    const body = new URLSearchParams();
+    body.set('itemId', item._id);
+    body.set('boughtBy', user._id)
+    return await firstValueFrom(
+      this.http.post('http://localhost:5000/app/buyItem', body, {
+        withCredentials: true,
+        headers: this.headers,
+      })
+    );
+  }
+
+  async getUser() {
+    const user = await this.authService.getCurrentUser();
+    if (!user) {
+      return null;
+    }
+    return user;
+  }
+
 
 }

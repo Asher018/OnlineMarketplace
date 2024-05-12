@@ -11,7 +11,7 @@ import { AuthService } from './shared/services/auth.service';
   imports: [RouterOutlet,
     LoginComponent,
     SignupComponent,
-    NavbarComponent
+    NavbarComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

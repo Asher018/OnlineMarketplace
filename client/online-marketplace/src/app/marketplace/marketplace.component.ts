@@ -9,6 +9,8 @@ import { MatCardModule } from '@angular/material/card';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../shared/services/auth.service';
 import { User } from '../shared/model/User';
+import { UserService } from '../shared/services/user.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-marketplace',
@@ -24,7 +26,8 @@ export class MarketplaceComponent {
   constructor(
     private dialog: MatDialog,
     private itemService: ItemService,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ) {
     this.init();
   }
@@ -40,11 +43,19 @@ export class MarketplaceComponent {
   uploadItemDialog(): void {
     this.dialog.open(UploadItemDialogComponent, {
       minWidth: '400px',
+    }).afterClosed().subscribe(async () => {
+      await this.getItems();
     });
   }
 
   async getItems() {
     this.items = await this.itemService.getItems();
     console.log(this.items);
+  }
+
+  async buyItem(item: Item) {
+    const data = await this.itemService.buyItem(item);
+    await this.getItems();
+    console.log(data);
   }
 }

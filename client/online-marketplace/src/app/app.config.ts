@@ -18,7 +18,7 @@ export const appConfig: ApplicationConfig = {
     importProvidersFrom([
       provideFirebaseApp(() => initializeApp(firebaseConfig)),
       provideAuth(() => getAuth()),
-      provideFirestore(() => getFirestore())
-    ])
-  ]
+      provideFirestore(() => getFirestore()),
+    ]),
+  ],
 };

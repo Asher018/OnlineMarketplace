@@ -37,12 +37,14 @@ const configureRoutes = (passport, router) => {
         const name = req.body.name;
         const address = req.body.address;
         const nickname = req.body.nickname;
+        const role = req.body.role;
         const user = new User_1.User({
             email: email,
             password: password,
             name: name,
             address: address,
             nickname: nickname,
+            role: role,
         });
         user
             .save()
@@ -70,14 +72,56 @@ const configureRoutes = (passport, router) => {
                     owner: owner,
                     boughtBy: boughtBy,
                 });
-                newItem.save().then((data) => {
+                newItem
+                    .save()
+                    .then((data) => {
                     res.status(200).send(data);
-                }).catch((error) => {
+                })
+                    .catch((error) => {
                     res.status(500).send(error);
                 });
             }
             catch (error) {
                 console.error("Error uploading item:", error);
+                res.status(500).send(error);
+            }
+        }
+        else {
+            res.status(500).send("User is not logged in.");
+        }
+    });
+    router.post("/buyItem", (req, res) => {
+        if (req.isAuthenticated()) {
+            try {
+                const itemId = req.body.itemId;
+                const boughtBy = req.body.boughtBy;
+                const query = Item_1.Item.findById(itemId);
+                query
+                    .then((data) => {
+                    if (data) {
+                        if (data.boughtBy !== "") {
+                            res.status(500).send("item is already bought");
+                        }
+                        data.boughtBy = boughtBy;
+                        data
+                            .save()
+                            .then((data) => {
+                            res.status(200).send(data);
+                        })
+                            .catch((error) => {
+                            res.status(500).send(error);
+                        });
+                    }
+                    else {
+                        res.status(500).send("No item found");
+                    }
+                })
+                    .catch((error) => {
+                    res.status(500).send(error);
+                });
+            }
+            catch (error) {
+                console.error("Error buying item:", error);
                 res.status(500).send(error);
             }
         }
@@ -125,6 +169,20 @@ const configureRoutes = (passport, router) => {
             console.log(error);
             res.status(500).send("Internal server error.");
         });
+    });
+    router.post("/getMyItems", (req, res) => {
+        if (req.isAuthenticated()) {
+            const owner = req.body.owner;
+            const query = Item_1.Item.find({ owner: owner });
+            query.then((data) => {
+                res.status(200).send(data);
+            }).catch((error) => {
+                res.status(500).send(error);
+            });
+        }
+        else {
+            res.status(500).send("User is not logged in.");
+        }
     });
     router.get("/checkAuth", (req, res) => {
         if (req.isAuthenticated()) {

@@ -30,7 +30,7 @@ export class LoginComponent {
           if (data) {
             console.log(data);
             this.isLoading = false;
-            this.router.navigateByUrl('/user-management');
+            this.router.navigateByUrl('/marketplace');
           }
         },
         error: (err) => {

@@ -38,6 +38,7 @@ export class AuthService {
     body.set('address', user.address);
     body.set('nickname', user.nickname);
     body.set('password', user.password);
+    body.set('role', user.role)
 
     return this.http.post('http://localhost:5000/app/register', body, {headers: this.headers});
   }

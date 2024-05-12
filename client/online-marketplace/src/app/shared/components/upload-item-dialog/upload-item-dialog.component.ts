@@ -37,7 +37,7 @@ export class UploadItemDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<UploadItemDialogComponent>,
     private fb: FormBuilder,
-    private itemService: ItemService,
+    private itemService: ItemService
   ) {
     this.itemFormGroup = this.fb.group({
       name: ['', Validators.required],
@@ -72,7 +72,8 @@ export class UploadItemDialogComponent {
       description: this.itemFormGroup.get("description")?.value,
       owner: '',
       boughtBy: '',
-      image: ''
+      image: '',
+      _id: ''
     }
     console.log(item)
     try {
@@ -89,7 +90,6 @@ export class UploadItemDialogComponent {
   }
 
   async uploadImageToStorage(image: File) {
-    //const id = this.afs.createId();
-    //const filePath = `images/${id}`;
+
   }
 }
