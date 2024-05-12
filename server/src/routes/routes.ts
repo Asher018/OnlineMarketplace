@@ -2,7 +2,15 @@ import { Router, Request, Response, NextFunction } from "express";
 import { PassportStatic } from "passport";
 import { User } from "../model/User";
 import { Item } from "../model/Item";
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
+const upload = multer({
+  limits: {
+    fileSize: 10 * 1024 * 1024, // Adjust the maximum file size as needed (10MB in this example)
+  },
+});
 export const configureRoutes = (
   passport: PassportStatic,
   router: Router
@@ -61,7 +69,7 @@ export const configureRoutes = (
       });
   });
 
-  router.post("/itemUpload", (req: Request, res: Response) => {
+  router.post("/itemUpload", (req: any, res: Response) => {
     if (req.isAuthenticated()) {
       try {
         const name = req.body.name;
@@ -70,6 +78,7 @@ export const configureRoutes = (
         const image = req.body.image;
         const owner = req.body.owner;
         const boughtBy = req.body.boughtBy;
+
         const newItem = new Item({
           name: name,
           price: price,
@@ -78,6 +87,7 @@ export const configureRoutes = (
           owner: owner,
           boughtBy: boughtBy,
         });
+
         newItem
           .save()
           .then((data) => {
@@ -93,6 +103,38 @@ export const configureRoutes = (
     } else {
       res.status(500).send("User is not logged in.");
     }
+  });
+
+  router.post('/uploadImage', upload.single('file'), (req: any, res: any) => {
+    // Handle the uploaded file
+    let file = req.file;
+    console.log(file)
+    console.log(file.name)
+    if (!file) {
+      res.status(400).send('No file uploaded.');
+      return;
+    }
+  
+    // Define the destination directory where the file will be saved
+    const destinationDirectory = 'uploads/';
+  
+    // Define the new filename for the uploaded file (you can customize this as needed)
+    const newFileName = `${Date.now()}_${file.name}`;
+  
+    // Construct the full path where the file will be saved
+    const filePath = path.join(destinationDirectory, newFileName);
+  
+    // Use fs.rename to move the temporary file to its new location and name
+    fs.rename(file.path, filePath, (err: any) => {
+      if (err) {
+        console.error('Error saving file:', err);
+        res.status(500).send('Error saving file.');
+        return;
+      }
+  
+      // File saved successfully, send back a success response with the file path
+      res.status(200).json({ filePath });
+    });
   });
 
   router.post("/buyItem", (req: Request, res: Response) => {
@@ -178,6 +220,20 @@ export const configureRoutes = (
     if (req.isAuthenticated()) {
       const owner = req.body.owner;
       const query = Item.find({owner: owner});
+      query.then((data) => {
+        res.status(200).send(data);
+      }).catch((error) => {
+        res.status(500).send(error);
+      })
+    } else {
+      res.status(500).send("User is not logged in.");
+    }
+  });
+
+  router.post("/getMyBoughtItems", (req: Request, res: Response) => {
+    if (req.isAuthenticated()) {
+      const boughtBy = req.body.boughtBy;
+      const query = Item.find({boughtBy: boughtBy});
       query.then((data) => {
         res.status(200).send(data);
       }).catch((error) => {

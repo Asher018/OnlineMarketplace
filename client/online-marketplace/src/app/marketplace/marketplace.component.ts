@@ -11,11 +11,12 @@ import { AuthService } from '../shared/services/auth.service';
 import { User } from '../shared/model/User';
 import { UserService } from '../shared/services/user.service';
 import { firstValueFrom } from 'rxjs';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-marketplace',
   standalone: true,
-  imports: [NavbarComponent, MatButtonModule, MatCardModule, CommonModule],
+  imports: [NavbarComponent, MatButtonModule, MatCardModule, CommonModule, MatDividerModule],
   templateUrl: './marketplace.component.html',
   styleUrl: './marketplace.component.scss',
 })
@@ -34,18 +35,22 @@ export class MarketplaceComponent {
 
   async init() {
     this.user = this.authService.getUser();
+    console.log(this.user);
     if (!this.user) {
-      await this.authService.getCurrentUser();
+      this.user = await this.authService.getCurrentUser();
     }
     await this.getItems();
   }
 
   uploadItemDialog(): void {
-    this.dialog.open(UploadItemDialogComponent, {
-      minWidth: '400px',
-    }).afterClosed().subscribe(async () => {
-      await this.getItems();
-    });
+    this.dialog
+      .open(UploadItemDialogComponent, {
+        minWidth: '400px',
+      })
+      .afterClosed()
+      .subscribe(async () => {
+        await this.getItems();
+      });
   }
 
   async getItems() {

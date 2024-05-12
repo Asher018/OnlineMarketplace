@@ -5,42 +5,34 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../shared/services/auth.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterModule, MatProgressSpinnerModule, NavbarComponent],
+  imports: [FormsModule, CommonModule, RouterModule, MatProgressSpinnerModule, NavbarComponent, MatButtonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })
 export class LoginComponent {
   email: string = '';
   password: string = '';
-  errorMessage: string = '';
-  isLoading = false;
 
   constructor(private router: Router, private authService: AuthService) {}
 
   login() {
-    this.isLoading = true;
     if (this.email && this.password) {
-      this.errorMessage = '';
       this.authService.login(this.email, this.password).subscribe({
         next: (data) => {
           if (data) {
             console.log(data);
-            this.isLoading = false;
             this.router.navigateByUrl('/marketplace');
           }
         },
         error: (err) => {
           console.log(err);
-          this.isLoading = false;
         },
       });
-    } else {
-      this.isLoading = false;
-      this.errorMessage = 'Form is empty.';
     }
   }
 

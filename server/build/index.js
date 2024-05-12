@@ -36,14 +36,14 @@ const corsOptions = {
 };
 app.use((0, cors_1.default)(corsOptions));
 // bodyParser
-app.use(body_parser_1.default.urlencoded({ extended: true }));
+app.use(body_parser_1.default.urlencoded({ extended: true, limit: '10mb' }));
 // cookieParser
 app.use((0, cookie_parser_1.default)());
 // session
 const sessionOptions = {
     secret: 'testsecret',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
 };
 app.use((0, express_session_1.default)(sessionOptions));
 app.use(passport_1.default.initialize());

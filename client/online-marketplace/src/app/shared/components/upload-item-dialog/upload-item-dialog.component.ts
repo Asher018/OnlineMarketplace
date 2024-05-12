@@ -62,8 +62,7 @@ export class UploadItemDialogComponent {
       this.dialogRef.close();
       return;
     }
-
-    const url = await this.uploadImageToStorage(this.selectedFile);
+    const url = await this.itemService.uploadImage(this.selectedFile);
     console.log(url);
 
     const item: Item = {
@@ -77,7 +76,7 @@ export class UploadItemDialogComponent {
     }
     console.log(item)
     try {
-      let uploadedItem = await this.itemService.uploadItem(item);
+      let uploadedItem = await this.itemService.uploadItem(item, this.selectedFile);
       console.log(uploadedItem);
       if (uploadedItem) {
         console.log(await firstValueFrom(uploadedItem))
@@ -90,6 +89,6 @@ export class UploadItemDialogComponent {
   }
 
   async uploadImageToStorage(image: File) {
-
+    
   }
 }

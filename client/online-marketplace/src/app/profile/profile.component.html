@@ -1,1 +1,33 @@
 <app-navbar></app-navbar>
+
+<div *ngIf="user && user!.role === 'seller'" style="margin: auto; width:fit-content">Sold items:</div>
+<ng-container *ngFor="let myItem of myItems">
+    <mat-card *ngIf="myItem.boughtBy">
+        <mat-card-content>
+            <div>{{myItem.name}}</div>
+            <div>{{myItem.price}}</div>
+        </mat-card-content>
+    </mat-card>
+</ng-container>
+
+<div *ngIf="user && user!.role === 'seller'" style="margin: auto; width:fit-content">Available items:</div>
+<ng-container *ngFor="let myItem of myItems">
+    
+    <mat-card *ngIf="!myItem.boughtBy">
+        <mat-card-content>
+            <div>{{myItem.name}}</div>
+            <div>{{myItem.price}}</div>
+        </mat-card-content>
+    </mat-card>
+</ng-container>
+
+<div *ngIf="user && user!.role === 'buyer'" style="margin: auto; width:fit-content">Bought items:</div>
+<ng-container *ngFor="let myBoughtItem of myBoughtItems">
+    
+    <mat-card>
+        <mat-card-content>
+            <div>{{myBoughtItem.name}}</div>
+            <div>{{myBoughtItem.price}}</div>
+        </mat-card-content>
+    </mat-card>
+</ng-container>

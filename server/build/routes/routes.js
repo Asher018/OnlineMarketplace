@@ -3,6 +3,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.configureRoutes = void 0;
 const User_1 = require("../model/User");
 const Item_1 = require("../model/Item");
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const upload = multer({
+    limits: {
+        fileSize: 10 * 1024 * 1024, // Adjust the maximum file size as needed (10MB in this example)
+    },
+});
 const configureRoutes = (passport, router) => {
     router.get("/", (req, res) => {
         res.status(200).send("Hello, World!");
@@ -90,6 +98,32 @@ const configureRoutes = (passport, router) => {
             res.status(500).send("User is not logged in.");
         }
     });
+    router.post('/uploadImage', upload.single('file'), (req, res) => {
+        // Handle the uploaded file
+        let file = req.file;
+        console.log(file);
+        console.log(file.name);
+        if (!file) {
+            res.status(400).send('No file uploaded.');
+            return;
+        }
+        // Define the destination directory where the file will be saved
+        const destinationDirectory = 'uploads/';
+        // Define the new filename for the uploaded file (you can customize this as needed)
+        const newFileName = `${Date.now()}_${file.name}`;
+        // Construct the full path where the file will be saved
+        const filePath = path.join(destinationDirectory, newFileName);
+        // Use fs.rename to move the temporary file to its new location and name
+        fs.rename(file.path, filePath, (err) => {
+            if (err) {
+                console.error('Error saving file:', err);
+                res.status(500).send('Error saving file.');
+                return;
+            }
+            // File saved successfully, send back a success response with the file path
+            res.status(200).json({ filePath });
+        });
+    });
     router.post("/buyItem", (req, res) => {
         if (req.isAuthenticated()) {
             try {
@@ -174,6 +208,20 @@ const configureRoutes = (passport, router) => {
         if (req.isAuthenticated()) {
             const owner = req.body.owner;
             const query = Item_1.Item.find({ owner: owner });
+            query.then((data) => {
+                res.status(200).send(data);
+            }).catch((error) => {
+                res.status(500).send(error);
+            });
+        }
+        else {
+            res.status(500).send("User is not logged in.");
+        }
+    });
+    router.post("/getMyBoughtItems", (req, res) => {
+        if (req.isAuthenticated()) {
+            const boughtBy = req.body.boughtBy;
+            const query = Item_1.Item.find({ boughtBy: boughtBy });
             query.then((data) => {
                 res.status(200).send(data);
             }).catch((error) => {

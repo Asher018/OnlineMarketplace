@@ -1,6 +1,6 @@
 <h2 mat-dialog-title>Upload item</h2>
 <mat-dialog-content>
-  <form class="item-form-container" [formGroup]="itemFormGroup">
+  <form class="item-form-container" [formGroup]="itemFormGroup" enctype="multipart/form-data">
     <mat-form-field class="mat-form-fields">
       <mat-label>Enter the name of your item</mat-label>
       <input matInput placeholder="Lego Millennium falcon" formControlName="name" required>

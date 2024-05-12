@@ -15,13 +15,12 @@ export class ItemService {
 
   constructor(private http: HttpClient, private authService: AuthService) {}
 
-  async uploadItem(item: Item) {
+  async uploadItem(item: Item, file: File) {
     const user = await this.authService.getCurrentUser();
     console.log(user);
     if (!user) {
       return null;
     }
-
     const body = new URLSearchParams();
     body.set('name', item.name);
     body.set('price', item.price.toString());
@@ -34,6 +33,22 @@ export class ItemService {
       withCredentials: true,
       headers: this.headers,
     });
+  }
+
+  async uploadImage(file: any) {
+    const user = await this.authService.getCurrentUser();
+    console.log(user);
+    if (!user) {
+      return null;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+    
+    return await firstValueFrom(this.http.post<any>('http://localhost:5000/app/uploadImage', formData, {
+      withCredentials: true,
+      headers: this.headers,
+    }));
   }
 
   async getItems() {
@@ -51,6 +66,18 @@ export class ItemService {
     body.set("owner", user!._id);
     return await firstValueFrom(
       this.http.post('http://localhost:5000/app/getMyItems', body, {
+        withCredentials: true,
+        headers: this.headers,
+      })
+    );
+  }
+
+  async getMyBoughtItems() {
+    const user = await this.getUser();
+    const body = new URLSearchParams();
+    body.set("boughtBy", user!._id);
+    return await firstValueFrom(
+      this.http.post('http://localhost:5000/app/getMyBoughtItems', body, {
         withCredentials: true,
         headers: this.headers,
       })

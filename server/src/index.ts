@@ -36,7 +36,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 // bodyParser
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({extended: true, limit: '10mb'}));
 
 // cookieParser
 app.use(cookieParser());
@@ -45,7 +45,7 @@ app.use(cookieParser());
 const sessionOptions: expressSession.SessionOptions = {
     secret: 'testsecret',
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
 };
 app.use(expressSession(sessionOptions));
 
