@@ -53,4 +53,3 @@ app.use('/app', (0, routes_1.configureRoutes)(passport_1.default, express_1.defa
 app.listen(port, () => {
     console.log('Server is listening on port ' + port.toString());
 });
-console.log('After server is ready.');

@@ -1,0 +1,6 @@
+<nav id="navbar">
+    <button mat-button mat-button routerLink="/marketplace">Marketplace</button>
+    <button style="margin-left: auto;" *ngIf="user" mat-button routerLink="/profile">Profile</button>
+    <button style="margin-left: auto;" *ngIf="!user" mat-button routerLink="/login">Login</button>
+    <button *ngIf="user" mat-button (click)="logout()">Logout</button>
+</nav>

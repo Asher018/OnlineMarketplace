@@ -1,1 +1,22 @@
+<app-navbar></app-navbar>
 <p>marketplace works!</p>
+<button mat-button (click)="uploadItemDialog()">Upload item</button>
+
+<div class="item-card-container">
+    <mat-card *ngFor="let item of items" class="item-card">
+        <mat-card-header>
+            <mat-card-title>{{item.name}}</mat-card-title>
+        </mat-card-header>
+        <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+        <mat-card-content>
+            <p>
+                {{item.description}}
+            </p>
+        </mat-card-content>
+        <mat-card-actions>
+
+            <button *ngIf="item.owner != user?._id" mat-button>Buy</button>
+        </mat-card-actions>
+    </mat-card>
+</div>
+

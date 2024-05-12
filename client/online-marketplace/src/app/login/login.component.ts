@@ -4,11 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../shared/services/auth.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [FormsModule, CommonModule, RouterModule, MatProgressSpinnerModule],
+  imports: [FormsModule, CommonModule, RouterModule, MatProgressSpinnerModule, NavbarComponent],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss',
 })

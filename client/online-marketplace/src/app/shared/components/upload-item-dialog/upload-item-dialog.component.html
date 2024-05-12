@@ -1,0 +1,24 @@
+<h2 mat-dialog-title>Upload item</h2>
+<mat-dialog-content>
+  <form class="item-form-container" [formGroup]="itemFormGroup">
+    <mat-form-field class="mat-form-fields">
+      <mat-label>Enter the name of your item</mat-label>
+      <input matInput placeholder="Lego Millennium falcon" formControlName="name" required>
+    </mat-form-field>
+    <mat-form-field class="mat-form-fields">
+      <mat-label>Enter the price of your item</mat-label>
+      <input matInput placeholder="5000" formControlName="price" type="number" required>
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Description</mat-label>
+      <textarea formControlName="description" matInput></textarea>
+    </mat-form-field>
+    <mat-label>Choose an image to upload: </mat-label>
+      <button type="button" mat-raised-button (click)="fileInput.click()">{{selectedFile?.name || 'Choose file'}}</button>
+      <input formControlName="file" hidden (change)="onFileSelected($event)" #fileInput type="file" id="file">
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Cancel</button>
+  <button mat-button cdkFocusInitial (click)="uploadItem()">Upload</button>
+</mat-dialog-actions>

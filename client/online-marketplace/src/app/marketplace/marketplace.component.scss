@@ -1,0 +1,11 @@
+.item-card-container {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.item-card {
+    width: 400px;
+}
