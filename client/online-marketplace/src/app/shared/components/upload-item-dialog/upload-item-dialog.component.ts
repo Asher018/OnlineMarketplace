@@ -62,8 +62,8 @@ export class UploadItemDialogComponent {
       this.dialogRef.close();
       return;
     }
-    const url = await this.itemService.uploadImage(this.selectedFile);
-    console.log(url);
+    // const url = await this.itemService.uploadImage(this.selectedFile);
+    // console.log(url);
 
     const item: Item = {
       name: this.itemFormGroup.get("name")?.value,
