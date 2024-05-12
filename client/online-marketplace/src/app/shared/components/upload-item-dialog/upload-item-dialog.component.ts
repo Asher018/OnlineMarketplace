@@ -37,7 +37,7 @@ export class UploadItemDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<UploadItemDialogComponent>,
     private fb: FormBuilder,
-    private itemService: ItemService
+    private itemService: ItemService,
   ) {
     this.itemFormGroup = this.fb.group({
       name: ['', Validators.required],
