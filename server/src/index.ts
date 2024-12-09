@@ -21,7 +21,7 @@ mongoose.connect(dbUrl).then((_) => {
     return;
 });
 
-const whitelist = ['*', 'http://172.100.0.20:4200']
+const whitelist = ['*', 'http://172.100.0.20:4200', 'localhost:4200', 'localhost:8100', 'http://172.100.0.20:8100']
 const corsOptions = {
     origin: (origin: string | undefined, callback: (err: Error | null, allowed?: boolean) => void) => {
         if (whitelist.indexOf(origin!) !== -1 || whitelist.includes('*')) {

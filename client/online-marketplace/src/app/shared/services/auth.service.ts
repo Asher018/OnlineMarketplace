@@ -27,7 +27,7 @@ export class AuthService {
 
 
 
-    return this.http.post('http://172.100.0.10:5000/app/login', body, {headers: this.headers, withCredentials: true});
+    return this.http.post('http://localhost:5000/app/login', body, {headers: this.headers, withCredentials: true});
   }
 
   register(user: User) {
@@ -40,19 +40,19 @@ export class AuthService {
     body.set('password', user.password);
     body.set('role', user.role)
 
-    return this.http.post('http://172.100.0.10:5000/app/register', body, {headers: this.headers});
+    return this.http.post('http://localhost:5000/app/register', body, {headers: this.headers});
   }
 
   logout() {
-    return this.http.post('http://172.100.0.10:5000/app/logout', {}, {withCredentials: true, responseType: 'text'});
+    return this.http.post('http://localhost:5000/app/logout', {}, {withCredentials: true, responseType: 'text'});
   }
 
   checkAuth() {
-    return this.http.get<boolean>('http://172.100.0.10:5000/app/checkAuth', {withCredentials: true});
+    return this.http.get<boolean>('http://localhost:5000/app/checkAuth', {withCredentials: true});
   }
 
   async getCurrentUser(): Promise<User | null> {
-    this.user = await firstValueFrom(this.http.get<User | null>('http://172.100.0.10:5000/app/getCurrentUser', {withCredentials: true}));
+    this.user = await firstValueFrom(this.http.get<User | null>('http://localhost:5000/app/getCurrentUser', {withCredentials: true}));
     return this.user;
   }
 
